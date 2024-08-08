@@ -1,0 +1,16 @@
+services:
+
+  development:
+    profiles: [development] # This profile is used to start the app container in the Codespace.
+    container_name: xero-svc-development
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    volumes:
+      - .:/xero-svc
+    env_file:
+      - .env
+    stdin_open: true
+    # Use "forwardPorts" in **devcontainer.json** to forward an app port locally. 
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
