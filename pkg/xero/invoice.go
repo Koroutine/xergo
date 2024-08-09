@@ -1,6 +1,7 @@
 package xero
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -313,4 +314,48 @@ func (c *XeroClient) GetInvoiceAsURL(invoiceID string) (*url.URL, error) {
 
 	// Parse the OnlineInvoiceUrl to a URL:
 	return url.Parse(onlineInvoice.OnlineInvoiceUrl)
+}
+
+func (c *XeroClient) CreateInvoice(invoice *InvoiceBase) (*Invoice, error) {
+	req := c.SetupBaseRequest(POST, "/api.xro/2.0/Invoices")
+
+	body, err := json.Marshal(invoice)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Body = io.NopCloser(bytes.NewReader(body))
+	req.ContentLength = int64(len(body))
+
+	response, err := c.client.Do(&req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer response.Body.Close()
+
+	if response.StatusCode != 200 {
+		return nil, fmt.Errorf("could not create invoice unexpected status code: %d", response.StatusCode)
+	}
+
+	body, err = io.ReadAll(response.Body)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var invoiceResponse InvoicesResponse
+
+	err = json.Unmarshal(body, &invoiceResponse)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if len(invoiceResponse.Invoices) == 0 {
+		return nil, fmt.Errorf("no invoice returned")
+	}
+
+	return &invoiceResponse.Invoices[0], nil
 }
