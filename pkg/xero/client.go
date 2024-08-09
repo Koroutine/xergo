@@ -3,12 +3,14 @@ package xero
 import (
 	"context"
 	"net/http"
+	"net/url"
 
 	"golang.org/x/oauth2/clientcredentials"
 )
 
 type XeroClient struct {
 	client   *http.Client
+	baseURL  *url.URL
 	tenantId string
 }
 
@@ -21,7 +23,20 @@ type Params struct {
 	TenantId string
 }
 
-func NewClient(ctx context.Context, credentials OAuth2ClientCrendentials, params Params, scopes []string) (*XeroClient, error) {
+func NewClient(ctx context.Context, baseURL string, credentials OAuth2ClientCrendentials, params Params, scopes []string) (*XeroClient, error) {
+	base, err := url.Parse(baseURL)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Add the /api.xro/2.0/ path to the base URL:
+	endpoint := url.URL{
+		Scheme: base.Scheme,
+		Host:   base.Host,
+		Path:   "/api.xro/2.0/",
+	}
+
 	config := &clientcredentials.Config{
 		ClientID:     credentials.ClientId,
 		ClientSecret: credentials.ClientSecret,
@@ -35,5 +50,9 @@ func NewClient(ctx context.Context, credentials OAuth2ClientCrendentials, params
 
 	client := config.Client(ctx)
 
-	return &XeroClient{client: client, tenantId: params.TenantId}, nil
+	return &XeroClient{
+		client:   client,
+		baseURL:  &endpoint,
+		tenantId: params.TenantId,
+	}, nil
 }
