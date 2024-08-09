@@ -1,0 +1,36 @@
+name: xero/test
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  ci:
+    strategy:
+      matrix:
+        go: [ '1.22.x' ]
+        os: [ ubuntu-latest ]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@main
+
+      # Setup our base Go environment 🧬
+      - name: Setup Go Environment
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go }}
+      
+      # Run Go Test
+      - name: Go Test 🧪
+        run: make test
