@@ -74,4 +74,15 @@ func main() {
 	for _, invoice := range invoices.Invoices {
 		fmt.Println(invoice.InvoiceNumber)
 	}
+
+	contacts, err := client.GetContacts()
+
+	if err != nil {
+		fmt.Println("Error getting contacts:", err)
+		return
+	}
+
+	for _, contact := range contacts.Contacts {
+		fmt.Println(contact.Name, contact.ContactID)
+	}
 }
