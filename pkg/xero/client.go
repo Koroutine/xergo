@@ -34,7 +34,6 @@ func NewClient(ctx context.Context, baseURL string, credentials OAuth2ClientCren
 	endpoint := url.URL{
 		Scheme: base.Scheme,
 		Host:   base.Host,
-		Path:   "/api.xro/2.0/",
 	}
 
 	config := &clientcredentials.Config{
