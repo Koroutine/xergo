@@ -35,9 +35,9 @@ func (m HTTPMethod) String() string {
 func (c *XeroClient) SetupBaseRequest(method HTTPMethod, entity string) http.Request {
 	// Setup the endpoint URL:
 	endpoint := url.URL{
-		Scheme: "https",
-		Host:   "api.xero.com",
-		Path:   fmt.Sprintf("/api.xro/2.0/%s", entity),
+		Scheme: c.baseURL.Scheme,
+		Host:   c.baseURL.Host,
+		Path:   fmt.Sprintf("%s%s", c.baseURL.Path, entity),
 	}
 
 	header := http.Header{

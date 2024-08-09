@@ -47,6 +47,7 @@ func main() {
 
 	client, err := xero.NewClient(
 		ctx,
+		"https://api.xero.com",
 		xero.OAuth2ClientCrendentials{
 			ClientId:     XERO_CLIENT_ID,
 			ClientSecret: XERO_CLIENT_SECRET,
