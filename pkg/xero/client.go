@@ -24,6 +24,10 @@ func NewClient(ctx context.Context, credentials OAuth2ClientCrendentials, scopes
 		Scopes:       scopes,
 	}
 
+	// Sends the "client_id" and "client_secret" in the POST body
+	// as application/x-www-form-urlencoded parameters.
+	config.AuthStyle = 1
+
 	client := config.Client(ctx)
 
 	return &XeroClient{client: client}, nil
