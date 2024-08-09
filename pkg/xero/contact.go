@@ -1,6 +1,7 @@
 package xero
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -118,6 +119,50 @@ func (c *XeroClient) GetContactById(contactID string) (*Contact, error) {
 
 	if len(contactResponse.Contacts) == 0 {
 		return nil, fmt.Errorf("no contact found with ID %s", contactID)
+	}
+
+	return &contactResponse.Contacts[0], nil
+}
+
+func (c *XeroClient) CreateContact(contact *ContactBase) (*Contact, error) {
+	req := c.SetupBaseRequest(http.MethodPost, "/api.xro/2.0/Contacts")
+
+	body, err := json.Marshal(contact)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Body = io.NopCloser(bytes.NewReader(body))
+	req.ContentLength = int64(len(body))
+
+	response, err := c.client.Do(&req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer response.Body.Close()
+
+	if response.StatusCode != 200 {
+		return nil, fmt.Errorf("could not create contact, unexpected status code: %d", response.StatusCode)
+	}
+
+	body, err = io.ReadAll(response.Body)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var contactResponse ContactsResponse
+
+	err = json.Unmarshal(body, &contactResponse)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if len(contactResponse.Contacts) == 0 {
+		return nil, fmt.Errorf("no contact returned")
 	}
 
 	return &contactResponse.Contacts[0], nil
