@@ -15,9 +15,7 @@ type InvoicesResponse struct {
 }
 
 func (c *XeroClient) GetInvoices() (*InvoicesResponse, error) {
-	req := SetupBaseRequest(GET, "Invoices")
-
-	req.Header.Add("x-xero-tenant-id", c.tenantId)
+	req := c.SetupBaseRequest(GET, "Invoices")
 
 	response, err := c.client.Do(&req)
 
