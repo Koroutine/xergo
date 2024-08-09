@@ -3,7 +3,6 @@ package xero
 import (
 	"crypto/rand"
 	"fmt"
-	"log"
 	"net/http"
 	"net/url"
 	"time"
@@ -37,7 +36,7 @@ func (m HTTPMethod) String() string {
 	return "unknown"
 }
 
-func getIdempotencyKey(tenantId string, entity string) string {
+func getIdempotencyKey(tenantId string, entity string) (string, error) {
 	// Generate a ULID based on the current timestamp
 	now := time.Now().UTC()
 	// Generate a new entropy source:
@@ -47,11 +46,11 @@ func getIdempotencyKey(tenantId string, entity string) string {
 
 	// Oooh dear :(
 	if err != nil {
-		log.Fatalf("failed to generate ULID: %v", err)
+		return "", err
 	}
 
 	// e.g., "tenant:invoices:01J4V6F2QYM7K0HTPNGZ7ZY32T"
-	return fmt.Sprintf("%s:%s:%s", tenantId, entity, id.String())
+	return fmt.Sprintf("%s:%s:%s", tenantId, entity, id.String()), nil
 }
 
 func (c *XeroClient) SetupBaseRequest(method HTTPMethod, entity string) http.Request {
@@ -76,13 +75,15 @@ func (c *XeroClient) SetupBaseRequest(method HTTPMethod, entity string) http.Req
 		Header: header,
 	}
 
+	key, err := getIdempotencyKey(c.tenantId, entity)
+
 	// Check that the req.Method is in the list of methods that require the "Idempotency-Key" header:
-	if req.Method != GET.String() {
+	if err != nil && req.Method != GET.String() {
 		// Add the "Idempotency-Key" header to the request:
 		// This allows the client to retry the request without the risk of
 		// creating duplicate resources, in quick succession.
 		// https://developer.xero.com/documentation/guides/idempotent-requests/idempotency
-		req.Header.Add("Idempotency-Key", getIdempotencyKey(c.tenantId, entity))
+		req.Header.Add("Idempotency-Key", key)
 	}
 
 	return req

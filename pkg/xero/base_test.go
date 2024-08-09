@@ -8,7 +8,11 @@ import (
 func TestGetIdempotentKey(t *testing.T) {
 	tenantId := "tenant"
 	entity := "invoices"
-	idempotencyKey := getIdempotencyKey(tenantId, entity)
+	idempotencyKey, err := getIdempotencyKey(tenantId, entity)
+
+	if err != nil {
+		t.Error("expected no error")
+	}
 
 	if idempotencyKey == "" {
 		t.Error("expected idempotencyKey to not be empty")
