@@ -12,6 +12,7 @@ const (
 	GET    HTTPMethod = "GET"
 	POST   HTTPMethod = "POST"
 	PUT    HTTPMethod = "PUT"
+	PATCH  HTTPMethod = "PATCH"
 	DELETE HTTPMethod = "DELETE"
 )
 
@@ -23,13 +24,15 @@ func (m HTTPMethod) String() string {
 		return "POST"
 	case PUT:
 		return "PUT"
+	case PATCH:
+		return "PATCH"
 	case DELETE:
 		return "DELETE"
 	}
 	return "unknown"
 }
 
-func SetupBaseRequest(method HTTPMethod, entity string) http.Request {
+func (c *XeroClient) SetupBaseRequest(method HTTPMethod, entity string) http.Request {
 	// Setup the endpoint URL:
 	endpoint := url.URL{
 		Scheme: "https",
@@ -38,8 +41,10 @@ func SetupBaseRequest(method HTTPMethod, entity string) http.Request {
 	}
 
 	header := http.Header{
-		"Accept":       []string{"application/json"},
-		"Content-Type": []string{"application/json"},
+		"Accept":           []string{"application/json"},
+		"Content-Type":     []string{"application/json"},
+		"Xero-Tenant-Id":   []string{c.tenantId},
+		"X-Xero-Tenant-Id": []string{c.tenantId},
 	}
 
 	// Setup the base request using the endpoint:
