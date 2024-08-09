@@ -15,7 +15,7 @@ type InvoicesResponse struct {
 }
 
 func (c *XeroClient) GetInvoices() (*InvoicesResponse, error) {
-	req := c.SetupBaseRequest(GET, "Invoices")
+	req := c.SetupBaseRequest(GET, "/api.xro/2.0/Invoices")
 
 	response, err := c.client.Do(&req)
 
