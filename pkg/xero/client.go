@@ -8,7 +8,8 @@ import (
 )
 
 type XeroClient struct {
-	client *http.Client
+	client   *http.Client
+	tenantId string
 }
 
 type OAuth2ClientCrendentials struct {
@@ -16,7 +17,11 @@ type OAuth2ClientCrendentials struct {
 	ClientSecret string
 }
 
-func NewClient(ctx context.Context, credentials OAuth2ClientCrendentials, scopes []string) (*XeroClient, error) {
+type Params struct {
+	TenantId string
+}
+
+func NewClient(ctx context.Context, credentials OAuth2ClientCrendentials, params Params, scopes []string) (*XeroClient, error) {
 	config := &clientcredentials.Config{
 		ClientID:     credentials.ClientId,
 		ClientSecret: credentials.ClientSecret,
@@ -30,5 +35,5 @@ func NewClient(ctx context.Context, credentials OAuth2ClientCrendentials, scopes
 
 	client := config.Client(ctx)
 
-	return &XeroClient{client: client}, nil
+	return &XeroClient{client: client, tenantId: params.TenantId}, nil
 }
