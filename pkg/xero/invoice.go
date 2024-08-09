@@ -2,6 +2,7 @@ package xero
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 )
 
@@ -24,6 +25,10 @@ func (c *XeroClient) GetInvoices() (*InvoicesResponse, error) {
 	}
 
 	defer response.Body.Close()
+
+	if response.StatusCode != 200 {
+		return nil, fmt.Errorf("could not list invoices, unexpected status code: %d", response.StatusCode)
+	}
 
 	body, err := io.ReadAll(response.Body)
 
