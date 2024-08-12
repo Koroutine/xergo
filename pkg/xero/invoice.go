@@ -82,3 +82,23 @@ func (c *XeroClient) GetInvoiceByID(invoiceID string) (*Invoice, error) {
 
 	return &invoicesResponse.Invoices[0], nil
 }
+
+func (c *XeroClient) SendInvoiceAsEmail(invoiceID string) error {
+	req := c.SetupBaseRequest(POST, fmt.Sprintf("/api.xro/2.0/Invoices/%s/Email", invoiceID))
+
+	response, err := c.client.Do(&req)
+
+	if err != nil {
+		return err
+	}
+
+	if response.StatusCode != 200 {
+		return fmt.Errorf("failed to send invoice as email with ID: %s", invoiceID)
+	}
+
+	defer response.Body.Close()
+
+	// Request Body: <Empty> so we don't need to read the response body,
+	// we can just return nil
+	return nil
+}
