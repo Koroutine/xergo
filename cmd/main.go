@@ -85,4 +85,13 @@ func main() {
 	for _, contact := range contacts.Contacts {
 		fmt.Println(contact.Name, contact.ContactID)
 	}
+
+	contact, err := client.GetContactById("2f4c844f-6827-4a4c-9d54-f8ba2ebe0b87")
+
+	if err != nil {
+		fmt.Println("Error getting contact:", err)
+		return
+	}
+
+	fmt.Println(contact.Name, contact.ContactID)
 }
