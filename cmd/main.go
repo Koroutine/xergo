@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/michealroberts/xergo/pkg/xero"
+	"github.com/Koroutine/xergo/pkg/xero"
 )
 
 func getEnvironmentVariable(name string) (string, error) {

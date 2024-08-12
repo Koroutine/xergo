@@ -1,4 +1,4 @@
-module github.com/michealroberts/xergo
+module github.com/Koroutine/xergo
 
 go 1.22
 
