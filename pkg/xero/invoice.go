@@ -123,7 +123,7 @@ func (c *XeroClient) GetInvoiceAsURL(invoiceID string) (*url.URL, error) {
 	}
 
 	if response.StatusCode != 200 {
-		return nil, fmt.Errorf("failed to send invoice as email with ID: %s", invoiceID)
+		return nil, fmt.Errorf("failed to get invoice as url with ID: %s", invoiceID)
 	}
 
 	defer response.Body.Close()
