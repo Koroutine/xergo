@@ -7,9 +7,93 @@ import (
 	"net/url"
 )
 
+type InvoiceType int
+
+const (
+	ACCPAY InvoiceType = iota // A bill – commonly known as an Accounts Payable or supplier invoice
+	ACCREC                    // A sales invoice – commonly known as an Accounts Receivable or customer invoice
+)
+
+func (it InvoiceType) String() string {
+	types := [...]string{"ACCPAY", "ACCREC"}
+	if int(it) < 0 || int(it) >= len(types) {
+		return "UNKNOWN"
+	}
+	return types[it]
+}
+
+type InvoiceStatus int
+
+const (
+	Draft      InvoiceStatus = iota // The default status if this element is not provided with your API call
+	Submitted                       // Useful if there is an approval process required
+	Deleted                         // An invoice with a status of DELETED will not be included in the Aged Receivables Report
+	Authorised                      // The "approved" state of an invoice ready for sending to a customer
+	Paid                            // Once an invoice is fully paid, the status will change to PAID
+	Voided                          // If an invoice is no longer required, it can be voided
+)
+
+func (is InvoiceStatus) String() string {
+	types := [...]string{"DRAFT", "SUBMITTED", "DELETED", "AUTHORISED", "PAID", "VOIDED"}
+	if int(is) < 0 || int(is) >= len(types) {
+		return "UNKNOWN"
+	}
+	return types[is]
+}
+
+type InvoiceBase struct {
+	Type            InvoiceType   `json:"Type"`
+	InvoiceNumber   string        `json:"InvoiceNumber,omitempty"`
+	Reference       string        `json:"Reference"`
+	AmountDue       float64       `json:"AmountDue,omitempty"`
+	AmountPaid      float64       `json:"AmountPaid,omitempty"`
+	SentToContact   bool          `json:"SentToContact,omitempty"`
+	CurrencyRate    float64       `json:"CurrencyRate,omitempty"`
+	IsDiscounted    bool          `json:"IsDiscounted,omitempty"`
+	HasErrors       bool          `json:"HasErrors,omitempty"`
+	Contact         Contact       `json:"Contact"`
+	DateString      string        `json:"DateString,omitempty"`
+	Date            string        `json:"Date"`
+	DueDateString   string        `json:"DueDateString,omitempty"`
+	DueDate         string        `json:"DueDate"`
+	BrandingThemeID string        `json:"BrandingThemeID"`
+	Status          InvoiceStatus `json:"Status"`
+	SubTotal        float64       `json:"SubTotal,omitempty"`
+	TotalTax        float64       `json:"TotalTax,omitempty"`
+	Total           float64       `json:"Total,omitempty"`
+	UpdatedDateUTC  string        `json:"UpdatedDateUTC,omitempty"`
+	CurrencyCode    string        `json:"CurrencyCode"`
+	Reason          string        `json:"Reason,omitempty"`
+	OrderRef        string        `json:"OrderRef,omitempty"`
+	LineItems       []LineItem    `json:"LineItems"`
+}
+
 type Invoice struct {
-	InvoiceID     string `json:"InvoiceID"`
-	InvoiceNumber string `json:"InvoiceNumber"`
+	InvoiceID       string        `json:"InvoiceID,omitempty"`
+	Type            InvoiceType   `json:"Type"`
+	InvoiceNumber   string        `json:"InvoiceNumber,omitempty"`
+	Reference       string        `json:"Reference"`
+	AmountDue       float64       `json:"AmountDue,omitempty"`
+	AmountPaid      float64       `json:"AmountPaid,omitempty"`
+	SentToContact   bool          `json:"SentToContact,omitempty"`
+	CurrencyRate    float64       `json:"CurrencyRate,omitempty"`
+	IsDiscounted    bool          `json:"IsDiscounted,omitempty"`
+	HasErrors       bool          `json:"HasErrors,omitempty"`
+	Contact         Contact       `json:"Contact"`
+	DateString      string        `json:"DateString,omitempty"`
+	Date            string        `json:"Date"`
+	DueDateString   string        `json:"DueDateString,omitempty"`
+	DueDate         string        `json:"DueDate"`
+	BrandingThemeID string        `json:"BrandingThemeID"`
+	Status          InvoiceStatus `json:"Status"`
+	SubTotal        float64       `json:"SubTotal,omitempty"`
+	TotalTax        float64       `json:"TotalTax,omitempty"`
+	Total           float64       `json:"Total,omitempty"`
+	UpdatedDateUTC  string        `json:"UpdatedDateUTC,omitempty"`
+	CurrencyCode    string        `json:"CurrencyCode"`
+	Reason          string        `json:"Reason,omitempty"`
+	OrderRef        string        `json:"OrderRef,omitempty"`
+	LineItems       []LineItem    `json:"LineItems"`
 }
 
 type InvoicesResponse struct {
