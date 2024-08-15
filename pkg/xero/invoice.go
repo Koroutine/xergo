@@ -41,6 +41,53 @@ func (is InvoiceStatus) String() string {
 	return types[is]
 }
 
+func (is *InvoiceStatus) MarshalJSON() ([]byte, error) {
+	var s string
+	switch *is {
+	case Draft:
+		s = "DRAFT"
+	case Submitted:
+		s = "SUBMITTED"
+	case Deleted:
+		s = "DELETED"
+	case Authorised:
+		s = "AUTHORISED"
+	case Paid:
+		s = "PAID"
+	case Voided:
+		s = "VOIDED"
+	default:
+		return nil, fmt.Errorf("unknown InvoiceStatus: %d", *is)
+	}
+	return json.Marshal(s)
+}
+
+func (is *InvoiceStatus) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+
+	switch s {
+	case "DRAFT":
+		*is = Draft
+	case "SUBMITTED":
+		*is = Submitted
+	case "DELETED":
+		*is = Deleted
+	case "AUTHORISED":
+		*is = Authorised
+	case "PAID":
+		*is = Paid
+	case "VOIDED":
+		*is = Voided
+	default:
+		return fmt.Errorf("unknown InvoiceStatus: %s", s)
+	}
+
+	return nil
+}
+
 type InvoiceBase struct {
 	Type            InvoiceType   `json:"Type"`
 	InvoiceNumber   string        `json:"InvoiceNumber,omitempty"`
