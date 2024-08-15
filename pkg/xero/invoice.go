@@ -22,6 +22,37 @@ func (it InvoiceType) String() string {
 	return types[it]
 }
 
+func (it *InvoiceType) MarshalJSON() ([]byte, error) {
+	var s string
+	switch *it {
+	case ACCPAY:
+		s = "ACCPAY"
+	case ACCREC:
+		s = "ACCREC"
+	default:
+		return nil, fmt.Errorf("unknown InvoiceType: %d", *it)
+	}
+	return json.Marshal(s)
+}
+
+func (it *InvoiceType) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+
+	switch s {
+	case "ACCPAY":
+		*it = ACCPAY
+	case "ACCREC":
+		*it = ACCREC
+	default:
+		return fmt.Errorf("unknown InvoiceType: %s", s)
+	}
+
+	return nil
+}
+
 type InvoiceStatus int
 
 const (
