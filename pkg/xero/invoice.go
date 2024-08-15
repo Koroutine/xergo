@@ -53,10 +53,10 @@ type InvoiceBase struct {
 	HasErrors       bool          `json:"HasErrors,omitempty"`
 	Contact         Contact       `json:"Contact"`
 	DateString      string        `json:"DateString,omitempty"`
-	Date            string        `json:"Date"`
+	Date            string        `json:"Date,omitempty"`
 	DueDateString   string        `json:"DueDateString,omitempty"`
-	DueDate         string        `json:"DueDate"`
-	BrandingThemeID string        `json:"BrandingThemeID"`
+	DueDate         string        `json:"DueDate,omitempty"`
+	BrandingThemeID string        `json:"BrandingThemeID,omitempty"`
 	Status          InvoiceStatus `json:"Status"`
 	SubTotal        float64       `json:"SubTotal,omitempty"`
 	TotalTax        float64       `json:"TotalTax,omitempty"`
