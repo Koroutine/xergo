@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-  // Setup your scopes, matching you OAuth client setup.
+  	// Setup your scopes, matching you OAuth client setup.
 	// https://developer.xero.com/documentation/guides/oauth2/scopes
 	scopes := []string{"accounting.contacts", "accounting.attachments", "accounting.transactions"}
 
@@ -35,7 +35,7 @@ func main() {
 		scopes,
 	)
   
-  // Oh, no.
+  	// Oh, no.
 	if err != nil {
 		fmt.Println("Error creating Xero client:", err)
 		return
