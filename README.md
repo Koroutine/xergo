@@ -1,6 +1,9 @@
 # xergo
 
-### Intro
+![GitHub go.mod Go version (branch & subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/Koroutine/xergo/main?filename=go.mod&label=Go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Koroutine/xergo)](https://goreportcard.com/report/github.com/Koroutine/xergo)
+[![xero/ci](https://github.com/Koroutine/xergo/actions/workflows/ci.yaml/badge.svg)](https://github.com/Koroutine/xergo/actions/workflows/ci.yaml)
+[![xero/test](https://github.com/Koroutine/xergo/actions/workflows/test.yaml/badge.svg)](https://github.com/Koroutine/xergo/actions/workflows/test.yaml)
 
 A simple oauth2 client for the Xero accounting API, handling authorised and authenticated HTTP requests, as specified in RFC 6749. 
 
