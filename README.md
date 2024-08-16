@@ -1,5 +1,12 @@
 # xergo
-A simple oauth2 client for the Xero accounting API
+
+### Intro
+
+A simple oauth2 client for the Xero accounting API, handling authorised and authenticated HTTP requests, as specified in RFC 6749. 
+
+It can additionally grant authorization with Bearer JWT and handle the automatic refreshing of bearer tokens.
+
+It also handles idempotency, sending the `Idempotency-Key` header along with POST, PUT and PACTH requests, ensuring that resources are not duplicated.
 
 ### Installation
 
