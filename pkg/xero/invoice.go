@@ -345,6 +345,10 @@ func (c *XeroClient) CreateInvoice(invoice *InvoiceBase) (*Invoice, error) {
 		return nil, err
 	}
 
+	if c.debug {
+		fmt.Println("xero response: ", string(body))
+	}
+
 	var invoiceResponse InvoicesResponse
 
 	err = json.Unmarshal(body, &invoiceResponse)

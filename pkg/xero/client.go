@@ -12,6 +12,7 @@ type XeroClient struct {
 	client   *http.Client
 	baseURL  *url.URL
 	tenantId string
+	debug    bool
 }
 
 type OAuth2ClientCrendentials struct {
@@ -54,4 +55,8 @@ func NewClient(ctx context.Context, baseURL string, credentials OAuth2ClientCren
 		baseURL:  &endpoint,
 		tenantId: params.TenantId,
 	}, nil
+}
+
+func (c *XeroClient) SetDebug(debug bool) {
+	c.debug = debug
 }
