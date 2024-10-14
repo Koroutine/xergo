@@ -9,10 +9,10 @@ import (
 )
 
 type ContactBase struct {
-	Name                      string    `json:"Name"`
-	FirstName                 string    `json:"FirstName"`
-	LastName                  string    `json:"LastName"`
-	EmailAddress              string    `json:"EmailAddress"`
+	Name                      string    `json:"Name,omitempty"`
+	FirstName                 string    `json:"FirstName,omitempty"`
+	LastName                  string    `json:"LastName,omitempty"`
+	EmailAddress              string    `json:"EmailAddress,omitempty"`
 	BankAccountDetails        string    `json:"BankAccountDetails,omitempty"`
 	CompanyNumber             string    `json:"CompanyNumber,omitempty"`
 	TaxNumber                 string    `json:"TaxNumber,omitempty"`
@@ -28,9 +28,9 @@ type Contact struct {
 	ContactID                   string        `json:"ContactID,omitempty"`
 	ContactStatus               string        `json:"ContactStatus,omitempty"`
 	Name                        string        `json:"Name,omitempty"`
-	FirstName                   string        `json:"FirstName"`
-	LastName                    string        `json:"LastName"`
-	EmailAddress                string        `json:"EmailAddress"`
+	FirstName                   string        `json:"FirstName,omitempty"`
+	LastName                    string        `json:"LastName,omitempty"`
+	EmailAddress                string        `json:"EmailAddress,omitempty"`
 	BankAccountDetails          string        `json:"BankAccountDetails,omitempty"`
 	CompanyNumber               string        `json:"CompanyNumber,omitempty"`
 	TaxNumber                   string        `json:"TaxNumber,omitempty"`
