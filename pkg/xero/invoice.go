@@ -336,7 +336,10 @@ func (c *XeroClient) CreateInvoice(invoice *InvoiceBase) (*Invoice, error) {
 	defer response.Body.Close()
 
 	if response.StatusCode != 200 {
-		return nil, fmt.Errorf("could not create invoice unexpected status code: %d", response.StatusCode)
+
+		body, _ = io.ReadAll(response.Body)
+
+		return nil, fmt.Errorf("could not create invoice unexpected status code: %d: %s", response.StatusCode, string(body))
 	}
 
 	body, err = io.ReadAll(response.Body)
