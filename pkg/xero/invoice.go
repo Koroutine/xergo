@@ -265,7 +265,9 @@ func (c *XeroClient) SendInvoiceAsEmail(invoiceID string) error {
 	}
 
 	if response.StatusCode != 200 {
-		return fmt.Errorf("failed to send invoice as email with ID: %s", invoiceID)
+		body, _ := io.ReadAll(response.Body)
+
+		return fmt.Errorf("failed to send invoice as email with ID: %s: %s", invoiceID, string(body))
 	}
 
 	defer response.Body.Close()
@@ -337,7 +339,7 @@ func (c *XeroClient) CreateInvoice(invoice *InvoiceBase) (*Invoice, error) {
 
 	if response.StatusCode != 200 {
 
-		body, _ = io.ReadAll(response.Body)
+		body, _ := io.ReadAll(response.Body)
 
 		return nil, fmt.Errorf("could not create invoice unexpected status code: %d: %s", response.StatusCode, string(body))
 	}
