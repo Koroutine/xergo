@@ -159,12 +159,12 @@ type Invoice struct {
 	CurrencyRate    float64       `json:"CurrencyRate,omitempty"`
 	IsDiscounted    bool          `json:"IsDiscounted,omitempty"`
 	HasErrors       bool          `json:"HasErrors,omitempty"`
-	Contact         Contact       `json:"Contact"`
+	Contact         *Contact      `json:"Contact,omitempty"`
 	DateString      string        `json:"DateString,omitempty"`
 	Date            string        `json:"Date,omitempty"`
 	DueDateString   string        `json:"DueDateString,omitempty"`
 	DueDate         string        `json:"DueDate,omitempty"`
-	BrandingThemeID string        `json:"BrandingThemeID"`
+	BrandingThemeID string        `json:"BrandingThemeID,omitempty"`
 	Status          InvoiceStatus `json:"Status,omitempty"`
 	SubTotal        float64       `json:"SubTotal,omitempty"`
 	TotalTax        float64       `json:"TotalTax,omitempty"`
@@ -351,6 +351,7 @@ func (c *XeroClient) PayInvoice(invoiceID string, accountID string, amount float
 	_, err := c.CreatePayment(&Payment{
 		Invoice: Invoice{
 			InvoiceID: invoiceID,
+			LineItems: []LineItem{},
 		},
 		Account: Account{
 			AccountID: accountID,
