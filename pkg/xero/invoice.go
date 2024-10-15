@@ -282,7 +282,7 @@ func (c *XeroClient) GetInvoiceAsPDF(invoiceID string) ([]byte, error) {
 	req := c.SetupBaseRequest(GET, fmt.Sprintf("/api.xro/2.0/Invoices/%s", invoiceID))
 
 	// Get the PDF
-	req.Header.Add("Accept", "application/pdf")
+	req.Header.Set("Accept", "application/pdf")
 
 	response, err := c.client.Do(&req)
 
