@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/url"
+	"time"
 )
 
 type InvoiceType int
@@ -121,9 +122,9 @@ func (is *InvoiceStatus) UnmarshalJSON(data []byte) error {
 }
 
 type InvoiceBase struct {
-	Type            InvoiceType   `json:"Type"`
+	Type            InvoiceType   `json:"Type,omitempty"`
 	InvoiceNumber   string        `json:"InvoiceNumber,omitempty"`
-	Reference       string        `json:"Reference"`
+	Reference       string        `json:"Reference,omitempty"`
 	AmountDue       float64       `json:"AmountDue,omitempty"`
 	AmountPaid      float64       `json:"AmountPaid,omitempty"`
 	SentToContact   bool          `json:"SentToContact,omitempty"`
@@ -136,7 +137,7 @@ type InvoiceBase struct {
 	DueDateString   string        `json:"DueDateString,omitempty"`
 	DueDate         string        `json:"DueDate,omitempty"`
 	BrandingThemeID string        `json:"BrandingThemeID,omitempty"`
-	Status          InvoiceStatus `json:"Status"`
+	Status          InvoiceStatus `json:"Status,omitempty"`
 	SubTotal        float64       `json:"SubTotal,omitempty"`
 	TotalTax        float64       `json:"TotalTax,omitempty"`
 	Total           float64       `json:"Total,omitempty"`
@@ -149,9 +150,9 @@ type InvoiceBase struct {
 
 type Invoice struct {
 	InvoiceID       string        `json:"InvoiceID,omitempty"`
-	Type            InvoiceType   `json:"Type"`
+	Type            InvoiceType   `json:"Type,omitempty"`
 	InvoiceNumber   string        `json:"InvoiceNumber,omitempty"`
-	Reference       string        `json:"Reference"`
+	Reference       string        `json:"Reference,omitempty"`
 	AmountDue       float64       `json:"AmountDue,omitempty"`
 	AmountPaid      float64       `json:"AmountPaid,omitempty"`
 	SentToContact   bool          `json:"SentToContact,omitempty"`
@@ -160,16 +161,16 @@ type Invoice struct {
 	HasErrors       bool          `json:"HasErrors,omitempty"`
 	Contact         Contact       `json:"Contact"`
 	DateString      string        `json:"DateString,omitempty"`
-	Date            string        `json:"Date"`
+	Date            string        `json:"Date,omitempty"`
 	DueDateString   string        `json:"DueDateString,omitempty"`
-	DueDate         string        `json:"DueDate"`
+	DueDate         string        `json:"DueDate,omitempty"`
 	BrandingThemeID string        `json:"BrandingThemeID"`
-	Status          InvoiceStatus `json:"Status"`
+	Status          InvoiceStatus `json:"Status,omitempty"`
 	SubTotal        float64       `json:"SubTotal,omitempty"`
 	TotalTax        float64       `json:"TotalTax,omitempty"`
 	Total           float64       `json:"Total,omitempty"`
 	UpdatedDateUTC  string        `json:"UpdatedDateUTC,omitempty"`
-	CurrencyCode    string        `json:"CurrencyCode"`
+	CurrencyCode    string        `json:"CurrencyCode,omitempty"`
 	Reason          string        `json:"Reason,omitempty"`
 	OrderRef        string        `json:"OrderRef,omitempty"`
 	LineItems       []LineItem    `json:"LineItems"`
@@ -344,6 +345,25 @@ func (c *XeroClient) GetInvoiceAsURL(invoiceID string) (*url.URL, error) {
 
 	// Parse the OnlineInvoiceUrl to a URL:
 	return url.Parse(onlineInvoice.OnlineInvoiceUrl)
+}
+
+func (c *XeroClient) PayInvoice(invoiceID string, accountID string, amount float64) error {
+	_, err := c.CreatePayment(&Payment{
+		Invoice: Invoice{
+			InvoiceID: invoiceID,
+		},
+		Account: Account{
+			AccountID: accountID,
+		},
+		Date:   time.Now().Format(time.DateOnly),
+		Amount: amount,
+	})
+
+	if err != nil {
+		return fmt.Errorf("could not pay invoice: %w", err)
+	}
+
+	return nil
 }
 
 func (c *XeroClient) CreateInvoice(invoice *InvoiceBase) (*Invoice, error) {
