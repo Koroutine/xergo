@@ -264,7 +264,7 @@ func (c *XeroClient) SendInvoiceAsEmail(invoiceID string) error {
 		return err
 	}
 
-	if response.StatusCode != 200 {
+	if response.StatusCode != 204 {
 		body, _ := io.ReadAll(response.Body)
 
 		return fmt.Errorf("failed to send invoice as email with ID: %s: %s", invoiceID, string(body))
