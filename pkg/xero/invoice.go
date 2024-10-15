@@ -277,6 +277,34 @@ func (c *XeroClient) SendInvoiceAsEmail(invoiceID string) error {
 	return nil
 }
 
+func (c *XeroClient) GetInvoiceAsPDF(invoiceID string) ([]byte, error) {
+	req := c.SetupBaseRequest(GET, fmt.Sprintf("/api.xro/2.0/Invoices/%s", invoiceID))
+
+	// Get the PDF
+	req.Header.Add("Accept", "application/pdf")
+
+	response, err := c.client.Do(&req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Read response to file
+	defer response.Body.Close()
+
+	if response.StatusCode != 200 {
+		return nil, fmt.Errorf("failed to get invoice as PDF with ID: %s", invoiceID)
+	}
+
+	body, err := io.ReadAll(response.Body)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return body, nil
+}
+
 // https://developer.xero.com/documentation/api/accounting/invoices#retrieving-the-online-invoice-url
 func (c *XeroClient) GetInvoiceAsURL(invoiceID string) (*url.URL, error) {
 	req := c.SetupBaseRequest(GET, fmt.Sprintf("/api.xro/2.0/Invoices/%s/OnlineInvoice", invoiceID))
