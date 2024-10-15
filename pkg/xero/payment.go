@@ -26,6 +26,10 @@ func (c *XeroClient) CreatePayment(payment *Payment) (*Payment, error) {
 		return nil, err
 	}
 
+	if c.debug {
+		fmt.Println("create payment request body:", string(body))
+	}
+
 	req.Body = io.NopCloser(bytes.NewReader(body))
 	req.ContentLength = int64(len(body))
 
